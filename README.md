@@ -29,6 +29,6 @@ This is a Flutter application developed for Week 2 internship task. It demonstra
 - Tasks stored as string list
 - Data remains saved even after closing the app
 
-# How to Run
-flutter pub get
-flutter run
+# Status
+
+Completed and ready for submission
