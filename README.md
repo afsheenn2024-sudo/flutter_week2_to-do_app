@@ -1,34 +1,55 @@
-# Flutter Week 2 - Data Management and Persistent Storage
+# Flutter Week 2 – Data Management and Persistent Storage
 
-This is a Flutter application developed for Week 2 internship task. It demonstrates state management, persistent storage, and a simple to-do list app using SharedPreferences.
+This Flutter application was developed as part of the Week 2 Flutter Internship. The project demonstrates basic state management using `setState` and local data persistence using `SharedPreferences`.
 
-# Features
+## Features
 
-# Counter App (State Management)
-- Increase counter value
-- Decrease counter value
-- Uses setState for UI updates
+* Counter application with increment and decrement functionality
+* State management using `setState`
+* Persistent storage of the counter value using `SharedPreferences`
+* Simple To-Do List application
+* Add and display tasks
+* Automatically save and load tasks using `SharedPreferences`
 
-# Persistent Storage
-- Saves counter value using SharedPreferences
-- Retrieves saved counter value when app restarts
+## Technologies Used
 
-# To-Do List App
-- Add new tasks
-- Display tasks in a ListView
-- Save tasks locally using SharedPreferences
-- Load saved tasks on app restart
+* Flutter
+* Dart
+* SharedPreferences
 
-# Tech Used
-- Flutter
-- Dart
-- SharedPreferences
+## Project Structure
 
-# Local Storage
-- Counter value stored as integer
-- Tasks stored as string list
-- Data remains saved even after closing the app
+```text
+lib/
+├── main.dart
+├── screens/
+│   └── home_screen.dart
+└── services/
+    └── storage_service.dart
+```
 
-# Status
+## Installation & Setup
 
-Completed and ready for submission
+### Clone the repository
+
+```bash
+git clone <your-github-repository-link>
+```
+
+### Open the project
+
+```bash
+cd flutter_week2_tasks
+```
+
+### Install dependencies
+
+```bash
+flutter pub get
+```
+
+### Run the application
+
+```bash
+flutter run
+```
