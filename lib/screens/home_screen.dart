@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../services/storage_service.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/task_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,58 +12,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  // Counter Variable
-  int counter = 0;
-
-  // Tasks List
-  List<String> tasks = [];
-
   // Controller
   final TextEditingController taskController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    loadData();
-  }
-
-  // Load Data from SharedPreferences
-  Future<void> loadData() async {
-    counter = await StorageService.getCounter();
-    tasks = await StorageService.getTasks();
-    setState(() {});
-  }
-
-  // Increase Counter
-  void increaseCounter() async {
-    setState(() {
-      counter++;
-    });
-    await StorageService.saveCounter(counter);
-  }
-
-  // Decrease Counter
-  void decreaseCounter() async {
-    if (counter > 0) {
-      setState(() {
-        counter--;
-      });
-
-      await StorageService.saveCounter(counter);
-    }
-  }
-
-  // Add Task
-  void addTask() async {
-    if (taskController.text.trim().isEmpty) return;
-
-    setState(() {
-      tasks.add(taskController.text.trim());
-    });
-
-    taskController.clear();
-    await StorageService.saveTasks(tasks);
-  }
 
   @override
   void dispose() {
@@ -71,6 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final taskProvider = Provider.of<TaskProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.teal.shade50,
 
@@ -104,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
 
-                  const Text(
+                  Text(
                     "Counter",
                     style: TextStyle(
                       color: Colors.white,
@@ -115,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
 
                   Text(
-                    "$counter",
+                    "${taskProvider.counter}",
                     style: const TextStyle(
                       fontSize: 55,
                       color: Colors.white,
@@ -130,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
 
                       ElevatedButton(
-                        onPressed: decreaseCounter,
+                        onPressed: taskProvider.decreaseCounter,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal.shade50,
                           foregroundColor: Colors.teal.shade700,
@@ -142,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: 20),
 
                       ElevatedButton(
-                        onPressed: increaseCounter,
+                        onPressed: taskProvider.increaseCounter,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal.shade50,
                           foregroundColor: Colors.teal.shade700,
@@ -198,7 +153,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 10),
 
                 ElevatedButton(
-                  onPressed: addTask,
+                  onPressed: () async {
+                    if (taskController.text.trim().isEmpty) return;
+
+                    await taskProvider.addTask(taskController.text);
+
+                    taskController.clear();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal.shade700,
                     foregroundColor: Colors.white,
@@ -212,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // TASK LIST
             Expanded(
-              child: tasks.isEmpty
+              child: taskProvider.tasks.isEmpty
                   ? const Center(
                 child: Text(
                   "No Tasks Yet",
@@ -223,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
                   : ListView.builder(
-                itemCount: tasks.length,
+                itemCount: taskProvider.tasks.length,
                 itemBuilder: (context, index) {
                   return Card(
                     color: Colors.white,
@@ -233,7 +194,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icons.task_alt,
                         color: Colors.teal,
                       ),
-                      title: Text(tasks[index]),
+                      title: Text(taskProvider.tasks[index]),
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          taskProvider.deleteTask(index);
+                        },
+                      ),
                     ),
                   );
                 },
